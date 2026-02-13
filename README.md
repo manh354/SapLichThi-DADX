@@ -1,66 +1,66 @@
-# H? Th?ng S?p X?p L?ch Thi (SapLichThi)
+﻿# Hệ Thống Sắp Xếp Lịch Thi (SapLichThi)
 
-D? �n cung c?p gi?i ph�p t? ??ng h�a vi?c x?p l?ch thi cho c�c tr??ng ??i h?c, gi?i quy?t b�i to�n l?p l?ch thi (Exam Timetabling Problem) ph?c t?p d?a tr�n c�c thu?t to�n t?i ?u h�a hi?n ??i. H? th?ng h? tr? x? l� c�c b? d? li?u chu?n qu?c t? nh? **Toronto Benchmark** v� **ITC 2007**.
+Dự án cung cấp giải pháp tự động hóa việc xếp lịch thi cho các trường đại học, giải quyết bài toán lập lịch thi (Exam Timetabling Problem) phức tạp dựa trên các thuật toán tối ưu hóa hiện đại. Hệ thống hỗ trợ xử lý các bộ dữ liệu chuẩn quốc tế như **Toronto Benchmark** và **ITC 2007**.
 
-## ?? T�nh N?ng N?i B?t
+## 🚀 Tính Năng Nổi Bật
 
-*   **Thu?t To�n T?i ?u**: S? d?ng **Simulated Annealing (T�i luy?n m� ph?ng)** k?t h?p v?i c�c k? thu?t t�m ki?m c?c b? (Neighborhood Search) ?? t�m ki?m l?i gi?i t?i ?u.
-*   **X? L� R�ng Bu?c ?a D?ng**:
-    *   **R�ng bu?c c?ng (Hard Constraints)**: Kh�ng tr�ng l?ch thi cho sinh vi�n, kh�ng v??t qu� s?c ch?a ph�ng.
-    *   **R�ng bu?c m?m (Soft Constraints)**: T?i ?u h�a kho?ng c�ch gi?a c�c m�n thi, tr�nh thi li�n ti?p, d?n l?ch thi h?p l�.
-*   **H? Tr? Benchmark**: T�ch h?p s?n b? d? li?u v� c�ng c? ?�nh gi� cho:
+*   **Thuật Toán Tối Ưu**: Sử dụng **Simulated Annealing (Tôi luyện mô phỏng)** kết hợp với các kỹ thuật tìm kiếm cục bộ (Neighborhood Search) để tìm kiếm lời giải tối ưu.
+*   **Xử Lý Ràng Buộc Đa Dạng**:
+    *   **Ràng buộc cứng (Hard Constraints)**: Không trùng lịch thi cho sinh viên, không vượt quá sức chứa phòng.
+    *   **Ràng buộc mềm (Soft Constraints)**: Tối ưu hóa khoảng cách giữa các môn thi, tránh thi liên tiếp, dồn lịch thi hợp lý.
+*   **Hỗ Trợ Benchmark**: Tích hợp sẵn bộ dữ liệu và công cụ đánh giá cho:
     *   Toronto Benchmark (Carter et al.)
     *   International Timetabling Competition (ITC) 2007
-*   **Ki?n tr�c Modular**: Thi?t k? ph�n t�ch r� r�ng gi?a Core, Algorithm, I/O v� Runner.
+*   **Kiến trúc Modular**: Thiết kế phân tách rõ ràng giữa Core, Algorithm, I/O và Runner.
 
-## ?? Chi Ti?t Thu?t To�n & Thi?t K?
+## 🧠 Chi Tiết Thuật Toán & Thiết Kế
 
-### 1. Thu?t To�n X?p L?ch (Scheduling Algorithms)
-H? th?ng �p d?ng quy tr�nh 2 giai ?o?n ?? gi?i quy?t b�i to�n x?p l?ch thi (Exam Timetabling Problem):
+### 1. Thuật Toán Xếp Lịch (Scheduling Algorithms)
+Hệ thống áp dụng quy trình 2 giai đoạn để giải quyết bài toán xếp lịch thi (Exam Timetabling Problem):
 
-*   **Giai ?o?n 1: X�y d?ng l?i gi?i ban ??u (Construction)**
-    *   S? d?ng c�c heuristic t� m�u ?? th? (**Graph Coloring**) nh? **Saturation Degree** (SD) ho?c **Largest Degree** (LD).
-    *   M?c ti�u: Nhanh ch�ng t?o ra m?t l?ch thi h?p l? (Feasible Solution) th?a m�n t?t c? r�ng bu?c c?ng (kh�ng tr�ng gi?, ?? ch? ng?i).
-    *   K? thu?t **Bin Packing** ???c s? d?ng ?? x?p t?i ?u c�c l?p thi v�o ph�ng thi, gi?m thi?u s? l??ng ph�ng s? d?ng.
+*   **Giai đoạn 1: Xây dựng lời giải ban đầu (Construction)**
+    *   Sử dụng các heuristic tô màu đồ thị (**Graph Coloring**) như **Saturation Degree** (SD) hoặc **Largest Degree** (LD).
+    *   Mục tiêu: Nhanh chóng tạo ra một lịch thi hợp lệ (Feasible Solution) thỏa mãn tất cả ràng buộc cứng (không trùng giờ, đủ chỗ ngồi).
+    *   Kỹ thuật **Bin Packing** được sử dụng để xếp tối ưu các lớp thi vào phòng thi, giảm thiểu số lượng phòng sử dụng.
 
-*   **Giai ?o?n 2: T?i ?u h�a (Optimization)**
-    *   S? d?ng gi?i thu?t **Simulated Annealing** (T�i luy?n m� ph?ng) ?? gi?m thi?u vi ph?m c�c r�ng bu?c m?m (Soft Constraints).
-    *   **C? ch? l�m m�t (Cooling Schedule)**: Nhi?t ?? gi?m d?n theo c�ng th?c h�nh h?c, ki?m so�t kh? n?ng ch?p nh?n l?i gi?i t?i h?n ?? tho�t kh?i c?c tr? ??a ph??ng (Local Optima).
-    *   **Kh�ng gian t�m ki?m (Neighborhood Search)**: S? d?ng ?a d?ng c�c to�n t? di chuy?n ?? kh�m ph� kh�ng gian l?i gi?i:
-        *   `Move`: Chuy?n 1 ca thi sang th?i gian/ph�ng kh�c.
-        *   `Swap`: Ho�n ??i 2 ca thi cho nhau.
-        *   `Kempe Chain`: Ho�n ??i chu?i c�c ca thi xung ??t (d?a tr�n l� thuy?t ?? th?) ?? t?o b??c ?i l?n cho vi?c di chuy?n.
+*   **Giai đoạn 2: Tối ưu hóa (Optimization)**
+    *   Sử dụng giải thuật **Simulated Annealing** (Tôi luyện mô phỏng) để giảm thiểu vi phạm các ràng buộc mềm (Soft Constraints).
+    *   **Cơ chế làm mát (Cooling Schedule)**: Nhiệt độ giảm dần theo công thức hình học, kiểm soát khả năng chấp nhận lời giải tồi hơn để thoát khỏi cực trị địa phương (Local Optima).
+    *   **Không gian tìm kiếm (Neighborhood Search)**: Sử dụng đa dạng các toán tử di chuyển để khám phá không gian lời giải:
+        *   `Move`: Chuyển 1 ca thi sang thời gian/phòng khác.
+        *   `Swap`: Hoán đổi 2 ca thi cho nhau.
+        *   `Kempe Chain`: Hoán đổi chuỗi các ca thi xung đột (dựa trên lý thuyết đồ thị) để tạo bước đi lớn cho việc di chuyển.
 
-### 2. Thi?t K? H? Th?ng (System Architecture)
-D? �n ???c thi?t k? theo ki?n tr�c ph�n l?p (Layered Architecture) nh?m ??m b?o t�nh b?o tr� v� m? r?ng:
+### 2. Thiết Kế Hệ Thống (System Architecture)
+Dự án được thiết kế theo kiến trúc phân lớp (Layered Architecture) nhằm đảm bảo tính bảo trì và mở rộng:
 
-*   **Domain Layer (`SapLichThiCore`)**: Ch?a c�c th?c th? c?t l�i (Core Entities) nh? `Student`, `ExamClass`, `Room`, `Period`. Layer n�y ??c l?p ho�n to�n v?i c�c layer kh�c.
+*   **Domain Layer (`SapLichThiCore`)**: Chứa các thực thể cốt lõi (Core Entities) như `Student`, `ExamClass`, `Room`, `Period`. Layer này độc lập hoàn toàn với các layer khác.
 *   **Algorithm Layer (`SapLichThiAlgorithm`)**:
-    *   Ch?a logic t�nh to�n t?i ?u.
-    *   C�c th�nh ph?n `Evaluator` (B? ?�nh gi�) v� `NeighborhoodMove` (To�n t? l�n c?n) ???c thi?t k? theo m?u **Strategy Pattern**, cho ph�p d? d�ng thay th? ho?c th�m m?i c�c thu?t to�n m� kh�ng ?nh h??ng ??n h? th?ng.
-*   **Infrastructure Layer (`SapLichThiStream`)**: X? l� c�c t�c v? nh?p xu?t v?t l� (??c file Excel/CSV, ghi file log, parser cho ??nh d?ng ITC 2007).
-*   **Orchestration Layer (`SapLichThiAutomatic`)**: ?�ng vai tr� ?i?u ph?i vi�n, k?t n?i d? li?u ??u v�o v?i thu?t to�n v� qu?n l� quy tr�nh ch?y t? ??ng (Pipeline).
+    *   Chứa logic tính toán tối ưu.
+    *   Các thành phần `Evaluator` (Bộ đánh giá) và `NeighborhoodMove` (Toán tử lân cận) được thiết kế theo mẫu **Strategy Pattern**, cho phép dễ dàng thay thế hoặc thêm mới các thuật toán mà không ảnh hưởng đến hệ thống.
+*   **Infrastructure Layer (`SapLichThiStream`)**: Xử lý các tác vụ nhập xuất vật lý (đọc file Excel/CSV, ghi file log, parser cho định dạng ITC 2007).
+*   **Orchestration Layer (`SapLichThiAutomatic`)**: Đóng vai trò điều phối viên, kết nối dữ liệu đầu vào với thuật toán và quản lý quy trình chạy tự động (Pipeline).
 
-## ?? C?u Tr�c D? �n
+## 📂 Cấu Trúc Dự Án
 
-Gi?i ph�p bao g?m c�c project ch�nh sau:
+Giải pháp bao gồm các project chính sau:
 
-| Project | M� T? |
+| Project | Mô Tả |
 | :--- | :--- |
-| **SapLichThiCore** | ??nh ngh?a c�c c?u tr�c d? li?u n?n t?ng (Student, ExamClass, Room, Period) v� c�c m� h�nh b�i to�n. ?�ng vai tr� l� Domain Layer. |
-| **SapLichThiAlgorithm** | Th? vi?n l�i ch?a c�c thu?t to�n x?p l?ch chi ti?t, bao g?m Simulated Annealing, Graph Coloring, Neighborhood Moves v� Evaluators. |
-| **SapLichThiNew** | Layer ?i?u ph?i quy tr�nh nghi?p v? (Business Workflow). ??nh ngh?a c�c b??c x? l� c? th?: T?o Context -> X�y d?ng l?i gi?i ban ??u -> T?i ?u h�a. |
-| **SapLichThiAutomatic** | Wrapper t? ??ng h�a, qu?n l� vi?c ??ng k� s? ki?n (Logging, Error Handling) v� k�ch ho?t quy tr�nh ch?y. |
-| **SapLichThiStream** | (Th? m?c `SapLichThiFile`) X? l� nh?p/xu?t d? li?u (??c file Excel/CSV, Parser ??nh d?ng ITC 2007) v� ghi Log h? th?ng. |
-| **AlgorithmExtensions** | Th? vi?n ti?n �ch ch?a c�c h�m b? tr? to�n h?c, x? l� danh s�ch, x�c su?t v� t?p con. |
-| **SapLichThiWebConsole** | ?ng d?ng Console ?�ng vai tr� l� entry point ?? ch?y c�c k?ch b?n benchmark v� ?�nh gi� k?t qu?, k?t n?i t?t c? c�c layer tr�n. |
+| **SapLichThiCore** | Định nghĩa các cấu trúc dữ liệu nền tảng (Student, ExamClass, Room, Period) và các mô hình bài toán. Đóng vai trò là Domain Layer. |
+| **SapLichThiAlgorithm** | Thư viện lõi chứa các thuật toán xếp lịch chi tiết, bao gồm Simulated Annealing, Graph Coloring, Neighborhood Moves và Evaluators. |
+| **SapLichThiNew** | Layer điều phối quy trình nghiệp vụ (Business Workflow). Định nghĩa các bước xử lý cụ thể: Tạo Context -> Xây dựng lời giải ban đầu -> Tối ưu hóa. |
+| **SapLichThiAutomatic** | Wrapper tự động hóa, quản lý việc đăng ký sự kiện (Logging, Error Handling) và kích hoạt quy trình chạy. |
+| **SapLichThiStream** | (Thư mục `SapLichThiFile`) Xử lý nhập/xuất dữ liệu (Đọc file Excel/CSV, Parser định dạng ITC 2007) và ghi Log hệ thống. |
+| **AlgorithmExtensions** | Thư viện tiện ích chứa các hàm bổ trợ toán học, xử lý danh sách, xác suất và tập con. |
+| **SapLichThiWebConsole** | Ứng dụng Console đóng vai trò là entry point để chạy các kịch bản benchmark và đánh giá kết quả, kết nối tất cả các layer trên. |
 
-## ??? Y�u C?u H? Th?ng
+## 🛠️ Yêu Cầu Hệ Thống
 
 *   [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-*   Visual Studio 2022 ho?c VS Code.
+*   Visual Studio 2022 hoặc VS Code.
 
-## ?? H??ng D?n C�i ??t & Ch?y
+## 🚀 Hướng Dẫn Cài Đặt & Chạy
 
 1.  **Clone repository**:
     ```bash
@@ -68,170 +68,160 @@ Gi?i ph�p bao g?m c�c project ch�nh sau:
     cd SapLichThiWeb-DADX
     ```
 
-2.  **Kh�i ph?c c�c g�i ph? thu?c (Restore)**:
+2.  **Khôi phục các gói phụ thuộc (Restore)**:
     ```bash
     dotnet restore
     ```
 
-3.  **Ch?y ?ng d?ng Benchmark (Console)**:
-    ?i?u h??ng ??n th? m?c `SapLichThiConsole` v� ch?y l?nh:
+3.  **Chạy ứng dụng Benchmark (Console)**:
+    Điều hướng đến thư mục `SapLichThiConsole` và chạy lệnh:
     ```bash
     cd SapLichThiConsole
     dotnet run
     ```
 
-4.  **S? d?ng ch??ng tr�nh**:
-    Khi ch?y, ch??ng tr�nh s? hi?n th? menu l?a ch?n:
-    *   `1`: Ch?y benchmark Toronto.
-    *   `2`: Ch?y benchmark ITC 2007.
-    *   `3`: ?�nh gi� c�c l?i gi?i (solution) ITC 2007 ?� c�.
+4.  **Sử dụng chương trình**:
+    Khi chạy, chương trình sẽ hiển thị menu lựa chọn:
+    *   `1`: Chạy benchmark Toronto.
+    *   `2`: Chạy benchmark ITC 2007.
+    *   `3`: Đánh giá các lời giải (solution) ITC 2007 đã có.
 
-    *L?u �: B?n c� th? c?n ?i?u ch?nh ???ng d?n file d? li?u ??u v�o trong `Program.cs` ?? ph� h?p v?i m�y c� nh�n.*
+    *Lưu ý: Bạn có thể cần điều chỉnh đường dẫn file dữ liệu đầu vào trong `Program.cs` để phù hợp với máy cá nhân.*
 
-## ?? ?�nh Gi� & K?t Qu?
+## 📊 Đánh Giá & Kết Quả
 
-H? th?ng cung c?p c�c b? ?�nh gi� (Evaluator) chi ti?t cho t?ng lo?i b�i to�n:
-*   **ITC 2007 Evaluator**: T�nh ?i?m ph?t d?a tr�n c�c ti�u ch�: TwoInARow, TwoInADay, PeriodSpread, MixedDurations, FrontLoad, v.v.
-*   **K?t qu? xu?t ra**: File log chi ti?t v� file `.sol` ch?a l?ch thi ?� x?p.
+Hệ thống cung cấp các bộ đánh giá (Evaluator) chi tiết cho từng loại bài toán:
+*   **ITC 2007 Evaluator**: Tính điểm phạt dựa trên các tiêu chí: TwoInARow, TwoInADay, PeriodSpread, MixedDurations, FrontLoad, v.v.
+*   **Kết quả xuất ra**: File log chi tiết và file `.sol` chứa lịch thi đã xếp.
 
-## ?? M� T? Chi Ti?t Domain Layer (SapLichThiCore)
+## 🧱 Mô Tả Chi Tiết Domain Layer (SapLichThiCore)
 
-Project **SapLichThiCore** l� tr�i tim c?a h? th?ng, ??nh ngh?a c�c m� h�nh d? li?u (Data Models) v� c?u tr�c c? b?n m� to�n b? gi?i ph�p s? d?ng. Vi?c t�ch bi?t n�y gi�p c�c t?ng kh�c (Algorithm, I/O) giao ti?p th?ng nh?t th�ng qua c�c "ng�n ng? chung".
+Project **SapLichThiCore** là trái tim của hệ thống, định nghĩa các mô hình dữ liệu (Data Models) và cấu trúc cơ bản mà toàn bộ giải pháp sử dụng. Việc tách biệt này giúp các tầng khác (Algorithm, I/O) giao tiếp thống nhất thông qua các "ngôn ngữ chung".
 
-### 1. C�c Th?c Th? Ch�nh (Data Objects)
-*   **Student (Sinh vi�n)**:
-    *   `ID`: M� s? sinh vi�n.
-    *   `Name`: T�n sinh vi�n (kh�ng b?t bu?c ??i v?i m?t s? benchmark).
-    *   `StudyGroupId`: M� nh�m h?c (n?u c�).
-*   **ExamClass (L?p thi)**:
-    *   ??i di?n cho m?t m�n thi c?n ???c x?p l?ch.
-    *   Ch?a th�ng tin: `ID` (M� l?p/m�n), `Count` (S? l??ng sinh vi�n), `Duration` (Th?i gian thi), `Students` (Danh s�ch sinh vi�n tham gia).
-*   **Room (Ph�ng thi)**:
-    *   Kh�ng gian v?t l� ?? t? ch?c thi.
-    *   Thu?c t�nh: `Capacity` (S?c ch?a t?i ?a), `RoomType` (Small/Medium/Large), `Building` (T�a nh�), `Floor` (T?ng).
+### 1. Các Thực Thể Chính (Data Objects)
+*   **Student (Sinh viên)**:
+    *   `ID`: Mã số sinh viên.
+    *   `Name`: Tên sinh viên (không bắt buộc đối với một số benchmark).
+    *   `StudyGroupId`: Mã nhóm học (nếu có).
+*   **ExamClass (Lớp thi)**:
+    *   Đại diện cho một môn thi cần được xếp lịch.
+    *   Chứa thông tin: `ID` (Mã lớp/môn), `Count` (Số lượng sinh viên), `Duration` (Thời gian thi), `Students` (Danh sách sinh viên tham gia).
+*   **Room (Phòng thi)**:
+    *   Không gian vật lý để tổ chức thi.
+    *   Thuộc tính: `Capacity` (Sức chứa tối đa), `RoomType` (Small/Medium/Large), `Building` (Tòa nhà), `Floor` (Tầng).
 *   **Period (Ca thi)**:
-    *   ??n v? th?i gian trong l?ch thi.
-    *   Thu?c t�nh: `Index` (Ch? s? tu?n t?), `Date` (Ng�y thi), `Shift` (Ca trong ng�y), `Duration` (?? d�i ca).
+    *   Đơn vị thời gian trong lịch thi.
+    *   Thuộc tính: `Index` (Chỉ số tuần tự), `Date` (Ngày thi), `Shift` (Ca trong ngày), `Duration` (Độ dài ca).
 
-### 2. M� H�nh R�ng Bu?c (Constraints)
-H? th?ng h? tr? ??nh ngh?a c�c r�ng bu?c ph?c t?p th�ng qua c�c l?p:
-*   **BinaryConstraint**: R�ng bu?c gi?a 2 l?p thi.
-    *   `SAME_SLOT`: Ph?i thi c�ng gi?.
-    *   `DIFFERENT_SLOT`: Ph?i thi kh�c gi?.
-    *   `AFTER`: L?p n�y ph?i thi sau l?p kia.
-*   **UnaryConstraint**: R�ng bu?c tr�n m?t l?p thi ??n l? (v� d?: `ROOM_EXCLUSIVE` - ph?i thi ph�ng ri�ng).
+### 2. Mô Hình Ràng Buộc (Constraints)
+Hệ thống hỗ trợ định nghĩa các ràng buộc phức tạp thông qua các lớp:
+*   **BinaryConstraint**: Ràng buộc giữa 2 lớp thi.
+    *   `SAME_SLOT`: Phải thi cùng giờ.
+    *   `DIFFERENT_SLOT`: Phải thi khác giờ.
+    *   `AFTER`: Lớp này phải thi sau lớp kia.
+*   **UnaryConstraint**: Ràng buộc trên một lớp thi đơn lẻ (ví dụ: `ROOM_EXCLUSIVE` - phải thi phòng riêng).
 
-### 3. C?u Tr�c D? Li?u B? Tr? (Data Structures)
+### 3. Cấu Trúc Dữ Liệu Bổ Trợ (Data Structures)
 *   **CustomGraph (`Graph<T>`)**:
-    *   C?u tr�c ?? th? t?ng qu�t ?? m� bi?u di?n m?i quan h? xung ??t.
-    *   S? d?ng trong thu?t to�n t� m�u ?? th? (Graph Coloring) ?? t�m l?i gi?i ban ??u.
-*   **DistanceArray**: (Trong `DataObjects`) H? tr? t�nh to�n kho?ng c�ch/chi ph� di chuy?n gi?a c�c ph�ng ho?c t�a nh� (n?u c�).
+    *   Cấu trúc đồ thị tổng quát để mô biểu diễn mối quan hệ xung đột.
+    *   Sử dụng trong thuật toán tô màu đồ thị (Graph Coloring) để tìm lời giải ban đầu.
+*   **DistanceArray**: (Trong `DataObjects`) Hỗ trợ tính toán khoảng cách/chi phí di chuyển giữa các phòng hoặc tòa nhà (nếu có).
 
-## ?? M� T? Chi Ti?t Algorithm Layer (SapLichThiAlgorithm)
+## 🧠 Mô Tả Chi Tiết Algorithm Layer (SapLichThiAlgorithm)
 
-Project **SapLichThiAlgorithm** l� n?i ch?a to�n b? logic x? l� th�ng minh c?a h? th?ng. ?�y l� n?i c�c thu?t to�n t?i ?u h�a, c?u tr�c d? li?u tr?ng th�i v� b? ?�nh gi� ???c c�i ??t.
+Project **SapLichThiAlgorithm** là nơi chứa toàn bộ logic xử lý thông minh của hệ thống. Đây là nơi các thuật toán tối ưu hóa, cấu trúc dữ liệu trạng thái và bộ đánh giá được cài đặt.
 
-### 1. C?u Tr�c Tr?ng Th�i (State Representation - Composite Schedule)
-H? th?ng s? d?ng m� h�nh ph�n c?p **Composite Schedule** ?? bi?u di?n tr?ng th�i c?a l?ch thi, gi�p qu?n l� d? d�ng c�c thao t�c di chuy?n v� t�nh to�n:
+### 1. Cấu Trúc Trạng Thái (State Representation - Composite Schedule)
+Hệ thống sử dụng mô hình phân cấp **Composite Schedule** để biểu diễn trạng thái của lịch thi, giúp quản lý dễ dàng các thao tác di chuyển và tính toán:
 
-*   **Lake (H?)**: ??i di?n cho to�n b? l?ch thi (Schedule). Ch?a danh s�ch c�c `Pond`.
-*   **Pond (Ao)**: ??i di?n cho m?t **Period** (Ca thi) c? th?. Ch?a danh s�ch c�c `Puddle`. T?i m?i `Pond`, ta bi?t ???c th?i gian di?n ra v� danh s�ch c�c l?p thi ?ang di?n ra trong ca ?�.
-*   **Puddle (V?ng)**: ??i di?n cho m?t **Room** (Ph�ng thi) trong m?t ca c? th?. ?�y l� ??n v? nh? nh?t ch?a c�c `ExamClass` (L?p thi) ???c x?p v�o. `Puddle` qu?n l� s?c ch?a c�n l?i c?a ph�ng.
+*   **Lake (Hồ)**: Đại diện cho toàn bộ lịch thi (Schedule). Chứa danh sách các `Pond`.
+*   **Pond (Ao)**: Đại diện cho một **Period** (Ca thi) cụ thể. Chứa danh sách các `Puddle`. Tại mỗi `Pond`, ta biết được thời gian diễn ra và danh sách các lớp thi đang diễn ra trong ca đó.
+*   **Puddle (Vũng)**: Đại diện cho một **Room** (Phòng thi) trong một ca cụ thể. Đây là đơn vị nhỏ nhất chứa các `ExamClass` (Lớp thi) được xếp vào. `Puddle` quản lý sức chứa còn lại của phòng.
 
-C?u tr�c `Lake -> Pond -> Puddle` gi�p truy xu?t nhanh ch�ng: "T?i ca X, ph�ng Y c� nh?ng m�n n�o?".
+Cấu trúc `Lake -> Pond -> Puddle` giúp truy xuất nhanh chóng: "Tại ca X, phòng Y có những môn nào?".
 
-### 2. B? T?i ?u H�a (Optimization Core)
+### 2. Bộ Tối Ưu Hóa (Optimization Core)
 *   **Simulated Annealing (`AnnealingMain`)**:
-    *   Thu?t to�n meta-heuristic ch�nh.
-    *   Qu?n l� tham s? nhi?t ?? (`Temperature`), t?c ?? l�m ngu?i (`CoolingRate`), v� ?? d�i chu?i Markov (`MarkovChainLength`) ?? c�n b?ng gi?a t�m ki?m r?ng (Exploration) v� t�m ki?m s�u (Exploitation).
-    *   S? d?ng c? ch? "Patient & Disappointment" ?? t? ??ng k�ch ho?t **Reheat** (t?ng nhi?t ?? l?i) khi thu?t to�n b? k?t ? c?c tr? ??a ph??ng qu� l�u.
+    *   Thuật toán meta-heuristic chính.
+    *   Quản lý tham số nhiệt độ (`Temperature`), tốc độ làm nguội (`CoolingRate`), và độ dài chuỗi Markov (`MarkovChainLength`) để cân bằng giữa tìm kiếm rộng (Exploration) và tìm kiếm sâu (Exploitation).
+    *   Sử dụng cơ chế "Patient & Disappointment" để tự động kích hoạt **Reheat** (tăng nhiệt độ lại) khi thuật toán bị kẹt ở cực trị địa phương quá lâu.
 
-### 3. Kh�ng Gian T�m Ki?m (Neighborhood Moves)
-C�c to�n t? di chuy?n x�c ??nh c�ch h? th?ng chuy?n t? tr?ng th�i hi?n t?i sang tr?ng th�i l�n c?n. ???c qu?n l� b?i `MoveListFactory`:
+### 3. Không Gian Tìm Kiếm (Neighborhood Moves)
+Các toán tử di chuyển xác định cách hệ thống chuyển từ trạng thái hiện tại sang trạng thái lân cận. Được quản lý bởi `MoveListFactory`:
 
-*   **SingleExamClassMove**: Di chuy?n m?t l?p thi t? ph�ng/ca n�y sang ph�ng/ca kh�c.
-*   **RoomMove**: Thay ??i ph�ng cho m?t l?p thi trong c�ng m?t ca.
-*   **RoomPeriodSwapMove**: Ho�n ??i v? tr� c?a hai l?p thi b?t k?.
-*   **ShiftSwapMove**: (Toronto) Ho�n ??i to�n b? c�c l?p thi gi?a hai ca thi.
-*   **Kempe Chain Move**: S? d?ng chu?i Kempe ?? ho�n ??i m?t t?p h?p c�c l?p thi xung ??t, cho ph�p th?c hi?n c�c b??c nh?y l?n trong kh�ng gian t�m ki?m m� kh�ng ph� v? t�nh h?p l?.
+*   **SingleExamClassMove**: Di chuyển một lớp thi từ phòng/ca này sang phòng/ca khác.
+*   **RoomMove**: Thay đổi phòng cho một lớp thi trong cùng một ca.
+*   **RoomPeriodSwapMove**: Hoán đổi vị trí của hai lớp thi bất kỳ.
+*   **ShiftSwapMove**: (Toronto) Hoán đổi toàn bộ các lớp thi giữa hai ca thi.
+*   **Kempe Chain Move**: Sử dụng chuỗi Kempe để hoán đổi một tập hợp các lớp thi xung đột, cho phép thực hiện các bước nhảy lớn trong không gian tìm kiếm mà không phá vỡ tính hợp lệ.
 
-### 4. X�y D?ng L?i Gi?i Ban ??u (Construction Heuristics)
-*   **ClassGraphColorer**: S? d?ng thu?t to�n t� m�u ?? th? (Graph Coloring) ?? t?o l?ch thi ban ??u.
-    *   H? tr? **DSATUR** (Degree of Saturation) ?? ch?n ??nh kh� t� nh?t t� tr??c.
-    *   T�ch h?p t�m ki?m c?c b? (Local Search) ngay trong giai ?o?n t� m�u ?? gi?m s? m�u (s? ca thi) s? d?ng.
+### 4. Xây Dựng Lời Giải Ban Đầu (Construction Heuristics)
+*   **ClassGraphColorer**: Sử dụng thuật toán tô màu đồ thị (Graph Coloring) để tạo lịch thi ban đầu.
+    *   Hỗ trợ **DSATUR** (Degree of Saturation) để chọn đỉnh khó tô nhất tô trước.
+    *   Tích hợp tìm kiếm cục bộ (Local Search) ngay trong giai đoạn tô màu để giảm số màu (số ca thi) sử dụng.
 
-### 5. B? ?�nh Gi� (Evaluators)
-???c c�i ??t theo **Strategy Pattern** th�ng qua `IEvaluator`, cho ph�p chuy?n ??i linh ho?t c�ch t�nh ?i?m ph?t:
-*   **TorontoEvaluator**: T�nh ?i?m d?a tr�n kho?ng c�ch gi?a c�c m�n thi (Proximity Cost) theo ??nh ngh?a c?a Carter et al.
-*   **ITC2007Evaluator**: T�nh t?ng h?p nhi?u lo?i ph?t ph?c t?p: TwoInARow, TwoInADay, PeriodSpread, MixedDurations, FrontLoad, v.v.
+### 5. Bộ Đánh Giá (Evaluators)
+Được cài đặt theo **Strategy Pattern** thông qua `IEvaluator`, cho phép chuyển đổi linh hoạt cách tính điểm phạt:
+*   **TorontoEvaluator**: Tính điểm dựa trên khoảng cách giữa các môn thi (Proximity Cost) theo định nghĩa của Carter et al.
+*   **ITC2007Evaluator**: Tính tổng hợp nhiều loại phạt phức tạp: TwoInARow, TwoInADay, PeriodSpread, MixedDurations, FrontLoad, v.v.
 
-## ?? M� T? Chi Ti?t Infrastructure Layer (SapLichThiFile / SapLichThiStream)
+## 🧱 Mô Tả Chi Tiết Infrastructure Layer (SapLichThiFile / SapLichThiStream)
 
-Project **SapLichThiStream** (n?m trong th? m?c `SapLichThiFile`) ch?u tr�ch nhi?m giao ti?p v?i th? gi?i b�n ngo�i, ??m b?o d? li?u ???c n?p v�o h? th?ng m?t c�ch chu?n h�a b?t k? ??nh d?ng ngu?n.
+Project **SapLichThiStream** (nằm trong thư mục `SapLichThiFile`) chịu trách nhiệm giao tiếp với thế giới bên ngoài, đảm bảo dữ liệu được nạp vào hệ thống một cách chuẩn hóa bất kể định dạng nguồn.
 
-### 1. Giao Di?n Chu?n H�a (Standard Interfaces)
-?? thu?t to�n (Algorithm Layer) kh�ng ph? thu?c v�o ngu?n d? li?u c? th?, h? th?ng ??nh ngh?a c�c interface giao ti?p:
-*   **`IDataSource`**: H?p ??ng cung c?p d? li?u th�.
-    *   `GetAllExamClasses()`: L?y danh s�ch l?p thi.
-    *   `GetRooms()`: L?y danh s�ch ph�ng thi.
-    *   `GetStudents()`: L?y danh s�ch sinh vi�n.
-*   **`ISchedulingModel`**: H?p ??ng cung c?p c?u h�nh b�i to�n v� r�ng bu?c.
-    *   `GetPeriods()`: L?y danh s�ch ca thi kh? d?ng.
-    *   `GetHardConstraints()`: L?y c?u h�nh b?t/t?t c�c r�ng bu?c c?ng.
-    *   `GetBinaryConstraints()` / `GetUnaryConstraints()`: L?y danh s�ch c�c r�ng bu?c c? th?.
+### 1. Giao Diện Chuẩn Hóa (Standard Interfaces)
+Để thuật toán (Algorithm Layer) không phụ thuộc vào nguồn dữ liệu cụ thể, hệ thống định nghĩa các interface giao tiếp:
+*   **`IDataSource`**: Hợp đồng cung cấp dữ liệu thô.
+    *   `GetAllExamClasses()`: Lấy danh sách lớp thi.
+    *   `GetRooms()`: Lấy danh sách phòng thi.
+    *   `GetStudents()`: Lấy danh sách sinh viên.
+*   **`ISchedulingModel`**: Hợp đồng cung cấp cấu hình bài toán và ràng buộc.
+    *   `GetPeriods()`: Lấy danh sách ca thi khả dụng.
+    *   `GetHardConstraints()`: Lấy cấu hình bật/tắt các ràng buộc cứng.
+    *   `GetBinaryConstraints()` / `GetUnaryConstraints()`: Lấy danh sách các ràng buộc cụ thể.
 
-### 2. B? ??c D? Li?u (Data Readers)
-H? th?ng c�i ??t c�c b? ??c chuy�n bi?t cho t?ng ??nh d?ng benchmark:
+### 2. Bộ Đọc Dữ Liệu (Data Readers)
+Hệ thống cài đặt các bộ đọc chuyên biệt cho từng định dạng benchmark:
 *   **`GeneralStreamCsvInput`**:
-    *   X? l� ??nh d?ng **Toronto Benchmark**.
-    *   ??c 2 file CSV ri�ng bi?t: Danh s�ch m�n h?c (`.crs`) v� Danh s�ch sinh vi�n (`.stu`).
-    *   S? d?ng th? vi?n `CsvHelper` ?? parse d? li?u nhanh ch�ng v� an to�n.
+    *   Xử lý định dạng **Toronto Benchmark**.
+    *   Đọc 2 file CSV riêng biệt: Danh sách môn học (`.crs`) và Danh sách sinh viên (`.stu`).
+    *   Sử dụng thư viện `CsvHelper` để parse dữ liệu nhanh chóng và an toàn.
 *   **`ITC2007ExamReader`**:
-    *   X? l� ??nh d?ng ph?c t?p c?a cu?c thi **ITC 2007**.
-    *   Parser th? c�ng (Custom Parser) ?? ??c file `.exam` ch?a nhi?u section kh�c nhau (`[Exams]`, `[Periods]`, `[Rooms]`, `[Constraints]`).
-    *   ?�ng vai tr� l� c? `IDataSource` (cung c?p d? li?u) v� `ISchedulingModel` (cung c?p tr?ng s? ph?t v� r�ng bu?c t? file input).
+    *   Xử lý định dạng phức tạp của cuộc thi **ITC 2007**.
+    *   Parser thủ công (Custom Parser) để đọc file `.exam` chứa nhiều section khác nhau (`[Exams]`, `[Periods]`, `[Rooms]`, `[Constraints]`).
+    *   Đóng vai trò là cả `IDataSource` (cung cấp dữ liệu) và `ISchedulingModel` (cung cấp trọng số phạt và ràng buộc từ file input).
 
-### 3. Xu?t D? Li?u (Data Export)
+### 3. Xuất Dữ Liệu (Data Export)
 *   **`StreamOutputExportable`**:
-    *   H? tr? xu?t b?t k? ??i t??ng n�o hi?n th?c interface `IExportableObject` ra ??nh d?ng CSV/Excel.
-    *   ???c s? d?ng ?? ghi b�o c�o chi ti?t ho?c xu?t log debug.
+    *   Hỗ trợ xuất bất kỳ đối tượng nào hiện thực interface `IExportableObject` ra định dạng CSV/Excel.
+    *   Được sử dụng để ghi báo cáo chi tiết hoặc xuất log debug.
 
-## ?? M� T? Chi Ti?t Quy Tr�nh Nghi?p V? (SapLichThiNew)
+## ⚙️ Mô Tả Chi Tiết Quy Trình Nghiệp Vụ (SapLichThiNew)
 
-Project **SapLichThiNew** ?�ng vai tr� l� Business Logic Layer (ho?c Workflow Layer), n?i l?p gh�p c�c th�nh ph?n r?i r?c t? `SapLichThiAlgorithm` v� `SapLichThiStream` th�nh m?t quy tr�nh x?p l?ch ho�n ch?nh.
+Project **SapLichThiNew** đóng vai trò là Business Logic Layer (hoặc Workflow Layer), nơi lắp ghép các thành phần rời rạc từ `SapLichThiAlgorithm` và `SapLichThiStream` thành một quy trình xếp lịch hoàn chỉnh.
 
-### 1. Ki?n Tr�c Process-SubProcess
-Project n�y s? d?ng m?u thi?t k? **Composite Process**, trong ?� m?i b??c x? l� nghi?p v? ???c g�i g?n trong m?t class k? th?a t? `AlgoProcess`:
-*   **`APOverall`**: Quy tr�nh t?ng th? ("Process Manager"), ch?u tr�ch nhi?m khai b�o v� ?i?u ph?i th? t? ch?y c?a c�c quy tr�nh con.
-*   **`AlgoProcess`**: L?p c? s? cung c?p c? ch?:
-    *   Qu?n l� v�ng ??i: `Initialize` -> `BeforeSubprocesses` -> `RunSubprocesses` -> `AfterSubprocesses` -> `Finish`.
-    *   Giao ti?p UI/Console: Th�ng qua c�c s? ki?n `OnInputRequest` (h?i ng??i d�ng tham s?) v� `OnConsoleLog` (xu?t th�ng b�o).
+### 1. Kiến Trúc Process-SubProcess
+Project này sử dụng mẫu thiết kế **Composite Process**, trong đó mỗi bước xử lý nghiệp vụ được gói gọn trong một class kế thừa từ `AlgoProcess`:
+*   **`APOverall`**: Quy trình tổng thể ("Process Manager"), chịu trách nhiệm khai báo và điều phối thứ tự chạy của các quy trình con.
+*   **`AlgoProcess`**: Lớp cơ sở cung cấp cơ chế:
+    *   Quản lý vòng đời: `Initialize` -> `BeforeSubprocesses` -> `RunSubprocesses` -> `AfterSubprocesses` -> `Finish`.
+    *   Giao tiếp UI/Console: Thông qua các sự kiện `OnInputRequest` (hỏi người dùng tham số) và `OnConsoleLog` (xuất thông báo).
 
-### 2. C�c B??c Ch�nh Trong Quy Tr�nh (`APOverall`)
+### 2. Các Bước Chính Trong Quy Trình (`APOverall`)
 1.  **Context Building (`APContextBuilder`)**:
-    *   Chuy?n ??i d? li?u th� t? `IDataSource` sang `AlgorithmContext` (??i t??ng ng? c?nh d�ng chung cho to�n b? thu?t to�n).
-    *   Thi?t l?p c�c tham s? ban ??u, danh s�ch ph�ng, m�n thi, r�ng bu?c.
+    *   Chuyển đổi dữ liệu thô từ `IDataSource` sang `AlgorithmContext` (đối tượng ngữ cảnh dùng chung cho toàn bộ thuật toán).
+    *   Thiết lập các tham số ban đầu, danh sách phòng, môn thi, ràng buộc.
 2.  **Preprocessing (`APPreprocessor`)**:
-    *   Chu?n h�a d? li?u: Gom nh�m l?p h?c t??ng ???ng (`ClassesGrouper`), ph�n t�ch xung ??t sinh vi�n (`CourseLinkageByCommonStudent`).
-    *   T�ch ph�ng (`RoomSeperator`): Ph�n lo?i ph�ng thi theo k�ch th??c/lo?i h�nh.
+    *   Chuẩn hóa dữ liệu: Gom nhóm lớp học tương đương (`ClassesGrouper`), phân tích xung đột sinh viên (`CourseLinkageByCommonStudent`).
+    *   Tách phòng (`RoomSeperator`): Phân loại phòng thi theo kích thước/loại hình.
 3.  **Scheduling (`APTimeFixedScheduler`, `APGeneralScheduler`)**:
-    *   X?p l?ch cho c�c m�n c� r�ng bu?c th?i gian c? ??nh tr??c.
-    *   X?p c�c m�n c�n l?i s? d?ng chi?n l??c **Greedy** k?t h?p **Bin Packing**. (`APSmallCourseScheduler`).
+    *   Xếp lịch cho các môn có ràng buộc thời gian cố định trước.
+    *   Xếp các môn còn lại sử dụng chiến lược **Greedy** kết hợp **Bin Packing**. (`APSmallCourseScheduler`).
 4.  **Structural Building (`APStructuralBuilder`)**:
-    *   X�y d?ng ?? th? xung ??t l?p h?c (`ClassGraphFiller`).
-    *   T� m�u ?? th? (`ClassGraphColorer`) ?? t�m l?i gi?i s? b? nhanh ch�ng.
+    *   Xây dựng đồ thị xung đột lớp học (`ClassGraphFiller`).
+    *   Tô màu đồ thị (`ClassGraphColorer`) để tìm lời giải sơ bộ nhanh chóng.
 5.  **Optimization (`APAnnealer`)**:
-    *   K�ch ho?t thu?t to�n **Simulated Annealing** ?? t?i ?u h�a l?ch thi v?a t?o.
-    *   H?i ng??i d�ng tham s? ch?y (Nhi?t ??, S? v�ng l?p) th�ng qua `APAnnealerQAndA`.
+    *   Kích hoạt thuật toán **Simulated Annealing** để tối ưu hóa lịch thi vừa tạo.
+    *   Hỏi người dùng tham số chạy (Nhiệt độ, Số vòng lặp) thông qua `APAnnealerQAndA`.
 6.  **Logging (`APSettingsLogging`)**:
-    *   L?u l?i c�c tham s? c?u h�nh ?� s? d?ng ra ??nh d?ng JSON/XML ?? t�i s? d?ng ho?c debug.
-
-### 3. Qu?n L� Ng? C?nh (AlgorithmContext)
-`AlgorithmContext` l� m?t "Global State" ch?y su?t qua pipeline x? l�:
-*   ???c kh?i t?o ? b??c ??u ti�n (`APContextBuilder`).
-*   ???c l�m gi�u (enriched) d?n qua c�c b??c (v� d?: `APPreprocessor` th�m th�ng tin v? ?? th? xung ??t).
-*   ???c ch?nh s?a b?i thu?t to�n (v� d?: `APAnnealer` c?p nh?t l?i tr?ng th�i `Lake` t?t nh?t t�m ???c).
-
-## ?? ?�ng G�p
-
-D? �n ???c ph�t tri?n nh?m m?c ?�ch nghi�n c?u v� gi?i quy?t b�i to�n th?c t?. M?i ?�ng g�p (Pull Request, Issue) ??u ???c hoan ngh�nh.
+    *   Lưu lại các tham số cấu hình đã sử dụng ra định dạng JSON
