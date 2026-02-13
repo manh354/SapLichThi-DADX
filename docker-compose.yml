@@ -1,0 +1,50 @@
+version: '3.4'
+
+services:
+  saplichthiweb:
+    user: root
+    image: ${DOCKER_REGISTRY-}saplichthiweb
+    container_name: saplichthiweb
+    build:
+      context: .
+      dockerfile: Dockerfile.Net
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./datastorage:/datastorage:rw
+    depends_on:
+      database:
+        condition: service_healthy
+      django:
+        condition: service_started
+    restart: always
+
+  database: 
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: filelocations_acc
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - db-volume:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      timeout: 10s
+      retries: 10
+
+  django:
+    user: root
+    build: .
+    command: gunicorn fileprocess.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./datastorage:/datastorage:rw
+volumes:
+  db-volume:
+
+networks:
+  common-network:
+    external: true

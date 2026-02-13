@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SapLichThiWeb-DADX\AlgorithmExtensions\AlgorithmExtensions.csproj" />
+    <ProjectReference Include="..\..\SapLichThiWeb-DADX\SapLichThiAlgorithm\SapLichThiAlgorithm.csproj" />
+    <ProjectReference Include="..\..\SapLichThiWeb-DADX\SapLichThiCore\SapLichThiCore.csproj" />
+    <ProjectReference Include="..\..\SapLichThiWeb-DADX\SapLichThiFile\SapLichThiStream.csproj" />
+    <ProjectReference Include="..\..\SapLichThiWeb-DADX\SapLichThiNew\SapLichThiNew.csproj" />
+  </ItemGroup>
+
+</Project>
