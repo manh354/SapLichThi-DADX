@@ -1,0 +1,142 @@
+@page "/schedule"
+@using WebInterface.Services
+@using SapLichThiAlgorithm.AlgorithmsObjects.CompositeSchedule
+@inject SchedulingService Scheduler
+
+<PageTitle>Schedule</PageTitle>
+
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="display-6 fw-bold mb-0">?? Exam Schedule</h1>
+            <p class="text-muted mb-0">Detailed view of examination timeline and room allocations</p>
+        </div>
+        <a href="/" class="btn btn-outline-secondary shadow-sm">
+            <span class="me-2">?</span>Back to Dashboard
+        </a>
+    </div>
+
+    @if (Scheduler.CurrentSchedule == null)
+    {
+        <div class="card border-warning border-start border-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="text-warning">?? No Schedule Available</h5>
+                <p class="mb-0">Please run a benchmark configuration from the dashboard first to generate the schedule.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        var pondsByDate = Scheduler.CurrentSchedule.Ponds
+            .OrderBy(p => p.Period.Index)
+            .GroupBy(p => p.Period.Date)
+            .OrderBy(g => g.Key)
+            .ToList();
+
+         @foreach (var dateGroup in pondsByDate)
+        {
+            <div class="mb-5 fade-in-section">
+                <!-- Date Header -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary text-white p-2 rounded-3 shadow-sm me-3 text-center" style="min-width: 60px;">
+                        @if (dateGroup.Key == DateOnly.MinValue)
+                        {
+                            <div class="fw-bold small">DAY</div>
+                            <div class="h5 mb-0">#</div>
+                        }
+                        else
+                        {
+                            <div class="fw-bold small text-uppercase">@dateGroup.Key.ToString("MMM")</div>
+                            <div class="h4 mb-0">@dateGroup.Key.Day</div>
+                        }
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold">
+                            @if (dateGroup.Key == DateOnly.MinValue) { <text>Generic Timeline</text> } else { @dateGroup.Key.ToString("dddd, MMMM dd, yyyy") }
+                        </h4>
+                        <span class="text-muted small">@dateGroup.Count() periods scheduled</span>
+                    </div>
+                </div>
+
+                <!-- Periods List -->
+                <div class="d-flex flex-column gap-4">
+                    @foreach (var pond in dateGroup)
+                    {
+                        var activePuddles = pond.Puddles.Where(p => p.Elements.Count > 0).OrderByDescending(p => p.GetUsedCapacity()).ToList();
+                        if (activePuddles.Count == 0) continue;
+
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-bottom-0 pt-3 pb-2 d-flex align-items-center">
+                                <span class="badge bg-light text-dark border me-2 p-2">Period @pond.Period.Index</span>
+                                <h5 class="mb-0 text-primary">Shift @pond.Period.Shift</h5>
+                                <div class="ms-auto text-muted small">
+                                    @activePuddles.Sum(p => p.Elements.Count) exams / @activePuddles.Sum(p => p.Elements.Sum(e => e.Count)) students
+                                </div>
+                            </div>
+                            <div class="card-body bg-light bg-opacity-25 pt-0">
+                                <hr class="mt-0 mb-3 opacity-25" />
+                                <div class="row g-3">
+                                    @foreach (var puddle in activePuddles)
+                                    {
+                                        var usedCap = puddle.GetUsedCapacity();
+                                        var roomCap = puddle.GetRoomCapacity();
+                                        var realRoomCap = puddle.Room.Capacity;
+                                        var percentage = roomCap > 0 ? (double)usedCap / roomCap * 100 : 0;
+                                        
+                                        // Colors based on usage
+                                        var statusColor = percentage >= 100 ? "danger" : (percentage > 80 ? "warning" : "success");
+                                        var borderColor = percentage >= 100 ? "border-danger" : (percentage > 80 ? "border-warning" : "border-info");
+
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div class="card h-100 shadow-sm @borderColor border-start border-3">
+                                                <div class="card-body p-2">
+                                                    <!-- Room Header -->
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <div class="fw-bold">
+                                                            @puddle.Room.Id
+                                                            <span class="text-muted small fw-normal ms-1">(@puddle.Room.RoomType)</span>
+                                                        </div>
+                                                        <span class="badge bg-@statusColor bg-opacity-10 text-@statusColor border border-@statusColor rounded-pill">
+                                                            @usedCap / @realRoomCap
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Progress Bar -->
+                                                    <div class="progress mb-2" style="height: 4px;">
+                                                        <div class="progress-bar bg-@statusColor" role="progressbar" style="width: @Math.Min(100, percentage)%;"></div>
+                                                    </div>
+
+                                                    <!-- Exam List -->
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        @foreach (var exam in puddle.Elements)
+                                                        {
+                                                            <div class="badge bg-white text-dark border shadow-sm d-flex align-items-center fw-normal" title="Students: @exam.Count">
+                                                                <span class="text-primary fw-bold me-1">@exam.Id</span>
+                                                                <span class="border-start ps-1 ms-1 text-muted small">@exam.Count</span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .fade-in-section {
+        animation: fadeIn 0.5s ease-in;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

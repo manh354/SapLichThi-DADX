@@ -1,0 +1,111 @@
+﻿@page "/"
+@using WebInterface.Services
+@inject SchedulingService Scheduler
+@implements IDisposable
+
+<PageTitle>Dashboard</PageTitle>
+
+<h1>Exam Scheduling Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">Run Benchmark</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Benchmark Type</label>
+                    <select class="form-control" @bind="BenchmarkType">
+                        <option value="Toronto">Toronto Benchmark</option>
+                        <option value="ITC2007">ITC 2007</option>
+                    </select>
+                </div>
+
+                @if (BenchmarkType == "Toronto")
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Course File Path (.crs)</label>
+                        <input class="form-control" @bind="TorontoCoursePath" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Student File Path (.stu)</label>
+                        <input class="form-control" @bind="TorontoStudentPath" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Timeslots</label>
+                        <input type="number" class="form-control" @bind="TorontoTimeslots" />
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Exam File Path (.exam)</label>
+                        <input class="form-control" @bind="ITCPath" />
+                    </div>
+                }
+
+                <button class="btn btn-primary" @onclick="RunBenchmark" disabled="@Scheduler.IsRunning">
+                    @if (Scheduler.IsRunning)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span> Running...</span>
+                    }
+                    else
+                    {
+                        <span>Start Benchmark</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">Logs</div>
+            <div class="card-body bg-light" style="max-height: 400px; overflow-y: auto;">
+                @foreach (var log in Scheduler.Logs) // Should probably reverse or limit
+                {
+                    <div class="small">@log</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Scheduler.CurrentSchedule != null)
+{
+    <div class="alert alert-success mt-3">
+        Schedule generated! 
+        <a href="schedule" class="alert-link">View Schedule</a> or 
+        <a href="evaluation" class="alert-link">View Evaluation</a>.
+    </div>
+}
+
+@code {
+    private string BenchmarkType = "Toronto";
+    private string TorontoCoursePath = @"E:\SapXepLichThiPythonInput\toronto_benchmark\converted\car-f-92.crs.csv";
+    private string TorontoStudentPath = @"E:\SapXepLichThiPythonInput\toronto_benchmark\converted\car-f-92.stu.csv";
+    private int TorontoTimeslots = 32;
+    private string ITCPath = @"E:\SapXepLichThiPythonInput\ITC2007\exam_comp_set1.exam";
+
+    protected override void OnInitialized()
+    {
+        Scheduler.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        Scheduler.OnChange -= StateHasChanged;
+    }
+
+    private void RunBenchmark()
+    {
+        if (BenchmarkType == "Toronto")
+        {
+            Scheduler.RunTorontoBenchmark(TorontoStudentPath, TorontoCoursePath, TorontoTimeslots);
+        }
+        else
+        {
+            Scheduler.RunITC2007Benchmark(ITCPath);
+        }
+    }
+}
